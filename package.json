@@ -39,5 +39,8 @@
 	},
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.8"
+	},
+	"optionalDependencies": {
+		"lightningcss.android-arm64.node": "^1.29.3-1"
 	}
 }
