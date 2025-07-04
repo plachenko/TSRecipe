@@ -345,7 +345,7 @@
 	<div class="flex w-full flex-row items-center justify-center rounded text-white shadow-lg">
 		<div class="flex w-full flex-col pb-1 px-1">
 			<div class="align-center items-center flex w-full flex-1">
-                <div class="border-r-2 border-[rgb(151, 27, 47)] pr-1">
+                <div class="border-r-2 border-[#971B2F] pr-1">
 
                 <button onclick={() => (currentRecipe = null)} class="flex items-center">
                     <img src={Logo} alt="Logo" class="h-12 w-12 rounded-md m-1" />
@@ -383,7 +383,7 @@
 									placeholder="Search recipes..."
 									class="w-full rounded border p-2 text-black"
 								/>
-                                <button class="p-2 text-black bg-slate-300 absolute right-1" onclick={() => (searchRecipe = '')}>x</button>
+                                <button class="absolute right-1 top-1 size-8 " onclick={() => (searchRecipe = '')}><div class="rounded-full flex h-full w-full items-center justify-center text-black bg-slate-300/30">x</div></button>
 							</div>
 
 							<button class="rounded bg-blue-500 p-2 text-white">Search</button>
@@ -421,7 +421,7 @@
 		</div>
 	{:else}
 		<div
-			class="mb-4 flex w-full flex-row flex-wrap items-center gap-2 rounded p-4 shadow-md"
+			class="mb-4 flex w-full flex-row flex-wrap items-center gap-2 rounded p-1 shadow-md"
 		>
 			{#each shownRecipes as recipe}
 				<button
