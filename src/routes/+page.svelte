@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
+    import Logo from '$lib/assets/logo.jpg';
 
 	// export let data: PageData;
 
@@ -340,11 +341,17 @@
 	});
 </script>
 
-<div class="flex flex-col bg-gray-100">
-	<div class="flex w-full flex-row items-center justify-center rounded bg-gray-200 shadow-lg">
-		<div class="flex w-full flex-col p-1">
-			<div class="align-center flex w-full flex-1">
-				<h1 class="flex-1 text-center text-2xl font-bold">
+<div class="flex flex-col bg-[rgba(41,40,40,0.99)]">
+	<div class="flex w-full flex-row items-center justify-center rounded text-white shadow-lg">
+		<div class="flex w-full flex-col pb-1 px-1">
+			<div class="align-center items-center flex w-full flex-1">
+                <div class="border-r-2 border-[rgb(151, 27, 47)] pr-1">
+
+                <button onclick={() => (currentRecipe = null)} class="flex items-center">
+                    <img src={Logo} alt="Logo" class="h-12 w-12 rounded-md m-1" />
+                </button>
+                </div>
+				<h1 class="flex-1  text-center text-2xl font-bold">
 					{#if currentRecipe}
 						{currentRecipe.title}
 					{:else}
@@ -369,39 +376,31 @@
 						<div
 							class="flex w-full flex-row items-center justify-between gap-2 rounded bg-white p-2 shadow-md"
 						>
-							<div class="flex-1">
+							<div class="flex-1 relative">
 								<input
 									bind:value={searchRecipe}
 									type="text"
 									placeholder="Search recipes..."
-									class="w-full rounded border p-2"
+									class="w-full rounded border p-2 text-black"
 								/>
+                                <button class="p-2 text-black bg-slate-300 absolute right-1" onclick={() => (searchRecipe = '')}>x</button>
 							</div>
 
 							<button class="rounded bg-blue-500 p-2 text-white">Search</button>
 						</div>
-						<button class="rounded bg-blue-500 text-white" onclick={() => navigate('/recipes/new')}
-							>Add New</button
+						<button class="rounded bg-blue-500 text-white w-15 border-white border-2" onclick={() => navigate('/recipes/new')}
+							>+</button
 						>
 					</div>
 				{/if}
 			</div>
-			<!--
-			<div class="flex-1 bg-slate-400">
-				<h1 class="text-2xl font-bold">
-					{#if currentRecipe}
-						{currentRecipe.title}
-					{:else}
-						Recipe Book
-					{/if}
-				</h1>
-			</div>
 
-        -->
 		</div>
 	</div>
+    <div class="bg-[rgba(41,40,40,0.99)] flex-1">
+
 	{#if currentRecipe}
-		<div class="mb-4 flex w-full flex-col rounded bg-white p-4 shadow-md">
+		<div class="mb-4 flex w-full flex-col rounded  p-4 shadow-md">
 			<h3>Created: {currentRecipe.created}</h3>
 			<div class="mb-4">
 				<strong>Ingredients:</strong>
@@ -422,7 +421,7 @@
 		</div>
 	{:else}
 		<div
-			class="mb-4 flex w-full flex-row flex-wrap items-center gap-2 rounded bg-white p-4 shadow-md"
+			class="mb-4 flex w-full flex-row flex-wrap items-center gap-2 rounded p-4 shadow-md"
 		>
 			{#each shownRecipes as recipe}
 				<button
@@ -447,4 +446,5 @@
 			{/each}
 		</div>
 	{/if}
+    </div>
 </div>
