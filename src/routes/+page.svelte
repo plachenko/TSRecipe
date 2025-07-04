@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 	import Logo from '$lib/assets/logo.jpg';
+    import SpeechRecognition from "$lib/components/SpeechRecognition.svelte";
 
 	// export let data: PageData;
 
@@ -325,6 +326,11 @@
 			textColor: '#FFFFFF' // White text
 		}
 	]);
+	let speechComp = $state(null);
+
+	function handleSpeech(transcript) {
+		searchRecipe = transcript.toLowerCase();
+	}
 
 	$effect(() => {
 		shownRecipes = recipes.filter((recipe) => {
@@ -341,9 +347,9 @@
 	});
 </script>
 
-<div class="flex flex-col bg-[rgba(41,40,40,0.99)]">
+<div class="flex flex-col bg-[rgba(41,40,40,0.99)] h-full">
 	<div class="flex w-full flex-row items-center justify-center rounded text-white shadow-lg">
-		<div class="flex w-full flex-col px-1 pb-1">
+		<div class="flex w-full flex-col px-1">
 			<div class=" align-center flex w-full flex-1 items-center">
 				<div class="border-r-2 border-[#971B2F] pr-1">
 					<button
@@ -362,15 +368,15 @@
 				</h1>
 				<button
 					class="mr-1 rounded border-2 border-white bg-[#971B2F] p-2 text-white"
-					onclick={() => navigate('/recipes/new')}>+ Add</button
+					onclick={() => {}}>+ Add</button
 				>
 			</div>
 			<div>
 				{#if currentRecipe}
-					<div class="flex gap-2 border-t-2 border-white pt-1">
+					<div class="flex gap-2 border-t-2 border-white py-1">
 						<button
 							class="flex-1 cursor-pointer rounded bg-red-500 p-2 text-white hover:bg-red-600"
-							onclick={() => (currentRecipe = null)}>Back to Recipes</button
+							onclick={() => {currentRecipe = null; searchRecipe = '';}}>Back to Recipes</button
 						>
 						<button
 							class="flex-1 cursor-pointer rounded bg-green-500 p-2 text-white hover:bg-green-600"
@@ -382,7 +388,7 @@
 						<div
 							class="bg-grey-100 flex w-full flex-row items-center justify-between gap-2 rounded p-1 shadow-md"
 						>
-							<div class="relative flex-1">
+							<div class="relative flex-1 flex gap-1">
 								<input
 									bind:value={searchRecipe}
 									type="text"
@@ -400,6 +406,7 @@
 										</div></button
 									>
 								{/if}
+        <SpeechRecognition bind:this={speechComp} {handleSpeech} />
 							</div>
 
 							<!-- <button class="rounded-md p-2 text-white">Search</button> -->
@@ -409,57 +416,80 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex h-full w-full flex-1 bg-red-300">
-		<div class="h-full w-full flex-1 bg-slate-400"></div>
-		<!--
-		{#if currentRecipe}
-			<div class="mb-4 flex w-full flex-col rounded p-4 shadow-md">
-				<h3>Created: {currentRecipe.created}</h3>
-				<div class="mb-4">
-					<strong>Ingredients:</strong>
-					<ul>
-						{#each currentRecipe.ingredients as ingredient}
-							<li>{ingredient.name} - {ingredient.qty}</li>
-						{/each}
-					</ul>
-				</div>
-				<div>
-					<strong>Plating Instructions:</strong>
-					<ol class="list-decimal pl-4">
-						{#each currentRecipe.plating as step}
-							<li style={`color: ${stations[step.station].color};`}>{step.instruction}</li>
-						{/each}
-					</ol>
-				</div>
-			</div>
-		{:else}
-			<div class="mb-4 flex w-full flex-row flex-wrap items-center gap-2 rounded p-1 shadow-md">
-				{#if shownRecipes.length == 0}
-					<div class="place-center flex h-full w-full items-center text-white">No Recipes</div>
-				{/if}
-				{#each shownRecipes as recipe}
+<!--
+	<div class="px-2">
+		<div class="flex w-full flex-row items-center justify-between bg-[#971B2F] mb-2 px-2 py-1 text-white">
+			<div class="flex items-center gap-2">
+				<span class="text-lg font-semibold">Stations:</span>
+				{#each stations as station}
 					<button
-						class="h-[200px] w-[32%] cursor-pointer overflow-hidden rounded bg-slate-200 p-4 hover:bg-slate-400"
-						onclick={() => {
-							currentRecipe = recipe;
-						}}
+						class="flex h-8 w-8 items-center justify-center rounded-full"
+						style={`background-color: ${station.color}; color: ${station.textColor};`}
 					>
-						<div class="mb-3 border-b text-lg font-semibold">{recipe.title}</div>
-						<div class="flex flex-row">
-							<div class="justify-left flex flex-1 flex-col items-start p-2">
-								{#each recipe.ingredients as ingredient}
-									<div style={`color: ${stations[ingredient.station].color};`} class={`text-sm`}>
-										<strong>{ingredient.name}</strong> &ndash;{ingredient.qty}
-									</div>
-								{/each}
-							</div>
-
-							<div class="flex-1 bg-slate-500">test</div>
-						</div>
+						{station.name.charAt(0).toUpperCase()}
 					</button>
 				{/each}
 			</div>
+		</div>
+	</div>
+-->
+	<div class="pt-1 h-full overflow-y-auto relative w-full bg-slate-500">
+		{#if currentRecipe}
+		<div class="p-2">
+		<div class="mb-4 flex w-full flex-col rounded p-4 shadow-md bg-slate-300">
+			<h3>Created: {currentRecipe.created}</h3>
+			<div class="mb-4">
+				<strong>Ingredients:</strong>
+				<ul>
+					{#each currentRecipe.ingredients as ingredient}
+						<li>{ingredient.name} - {ingredient.qty}</li>
+					{/each}
+				</ul>
+			</div>
+			<div>
+				<strong>Plating Instructions:</strong>
+				<ol class="list-decimal pl-4">
+					{#each currentRecipe.plating as step}
+						<li style={`color: ${stations[step.station].color};`}>{step.instruction}</li>
+					{/each}
+				</ol>
+			</div>
+		</div>
+		</div>
+
+		{:else}
+			{#if shownRecipes.length == 0}
+				<div class="place-center justify-center flex h-full w-full items-center text-white">
+					<div class="bg-slate-400/40 rounded-md p-2 user-select-none">No Recipes</div>
+				</div>
+			{:else}
+				<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 px-2 border-t-2 p-2 absolute top-0 w-full">
+					{#each shownRecipes as recipe}
+						<button
+							class="cursor-pointer rounded bg-slate-200 p-4 hover:bg-slate-400 text-left flex items-start flex-col"
+							onclick={() => {
+								currentRecipe = recipe;
+							}}
+						>
+							<div class="mb-3 border-b text-lg font-semibold w-full text-center text-black">{recipe.title}</div>
+							<div class="flex w-full h-full">
+<div class="flex flex-row w-full flex-1">
+								<div class="justify-left flex flex-1 flex-col items-start p-2">
+									{#each recipe.ingredients as ingredient}
+										<div style={`color: ${stations[ingredient.station].color};`} class={`text-sm`}>
+											<strong>{ingredient.name}</strong> &ndash;{ingredient.qty}
+										</div>
+									{/each}
+								</div>
+
+							</div>
+							<div class="flex-1 bg-slate-500 flex items-center justify-center h-full">no image</div>
+							</div>
+							
+						</button>
+					{/each}
+				</div>
+			{/if}
 		{/if}
-        -->
 	</div>
 </div>
