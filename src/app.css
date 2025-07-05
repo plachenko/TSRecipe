@@ -1,12 +1,13 @@
 @import 'tailwindcss';
 
-html,body{
-	height:100%;
+html,
+body {
+	height: 100%;
 }
 
 @layer base {
 	button {
-		@apply cursor-pointer bg-[#971b2f] font-bold text-white;
+		@apply cursor-pointer rounded-md bg-[#971b2f] font-bold text-white;
 	}
 
 	button:disabled {
@@ -18,4 +19,3 @@ html,body{
 		@apply w-full rounded border border-gray-300 p-2;
 	}
 }
-
